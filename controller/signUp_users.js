@@ -30,6 +30,12 @@ exports.post_new_users = (req, res) => {
   sendEmail(email, password, fullName);
 };
 
+exports.get_user = async (req, res) => {
+  //getting all the member from the mongodb
+  const findMembers = await SignUpUser.find();
+  res.send(findMembers); //sending the found memeber to registered_members path
+};
+
 const sendEmail = (signupMemberEmail, pass, fullName) => {
   let transporter = nodeMailer.createTransport({
     service: "gmail",
