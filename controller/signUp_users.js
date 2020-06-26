@@ -4,17 +4,17 @@ const nodeMailer = require("nodemailer");
 exports.post_new_users = async (req, res) => {
   const { fullName, email, password, gender } = req.body;
 
-  const password = password;
+  const pass = password;
   const saltR = 10;
   bcrypt.genSalt(saltR, (err, salt) => {
     if (err) {
       console.error(err);
     } else {
-      bcrypt.hash(password, salt, (err, hash) => {
+      bcrypt.hash(pass, salt, (err, hash) => {
         if (err) {
           console.error(err);
         } else {
-          const member = await new SignUpUser({
+          const member = new SignUpUser({
             //creating an instance of User data
             fullName,
             email,
