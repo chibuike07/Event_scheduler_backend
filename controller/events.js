@@ -12,7 +12,7 @@ exports.add_event = (res, req) => {
   console.log(event);
 };
 
-exports.put_books_activity = async (req, res) => {
+exports.put_event = async (req, res) => {
   const { id } = req.params;
 
   scheduledEvent.findByIdAndUpdate(id, req.body, (err, updated) => {
@@ -25,7 +25,7 @@ exports.put_books_activity = async (req, res) => {
   });
 };
 
-exports.delete_books_activity = async (req, res) => {
+exports.delete_event = async (req, res) => {
   const { id } = req.params;
   const removedData = await scheduledEvent.findByIdAndRemove(
     id,
