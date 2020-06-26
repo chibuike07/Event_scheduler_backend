@@ -1,7 +1,7 @@
 const SignUpUser = require("../models/signUp_users");
 const bcrypt = require("bcryptjs");
 const nodeMailer = require("nodemailer");
-exports.post_new_users = (req, res) => {
+exports.post_new_users = async (req, res) => {
   const { fullName, email, password, gender } = req.body;
 
   const password = password;
@@ -14,7 +14,7 @@ exports.post_new_users = (req, res) => {
         if (err) {
           console.error(err);
         } else {
-          const member = new SignUpUser({
+          const member = await new SignUpUser({
             //creating an instance of User data
             fullName,
             email,

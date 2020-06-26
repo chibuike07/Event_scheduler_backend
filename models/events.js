@@ -3,8 +3,8 @@ const Schema = mongoose.Schema;
 
 const event = new Schema({
   title: String,
-  date: { type: Date },
-  remindDate: { type: Date }
+  currentDate: { type: Date },
+  reminderDate: { type: Date }
 });
 
 let Scheduler = mongoose.model("EventScheduler", event);
