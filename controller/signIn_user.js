@@ -1,5 +1,4 @@
 const SignUpUser = require("../models/signUp_users");
-
 exports.get_user = async (req, res) => {
   const { email: Email, password: pass } = req.body;
   let secureId = await SignUpUser.find();

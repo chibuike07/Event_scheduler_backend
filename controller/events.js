@@ -1,8 +1,8 @@
 const scheduledEvent = require("../models/events");
-const signUpUser = require("../models/signUp_users");
+const SignInUser = require("../models/signIn_user");
+let array = [];
 exports.add_event = (res, req) => {
   const { title, currentDate, reminderDate } = req.body;
-  let userEvents = signUpUser.find({}, ["events"]);
   const event = new scheduledEvent({
     title,
     currentDate,
