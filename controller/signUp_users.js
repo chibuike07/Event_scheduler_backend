@@ -1,7 +1,7 @@
 const SignUpUser = require("../models/signUp_users");
 const bcrypt = require("bcryptjs");
 const nodeMailer = require("nodemailer");
-exports.post_new_users = async (req, res) => {
+exports.post_new_users = (req, res) => {
   const { fullName, email, password, gender } = req.body;
 
   const pass = password;
@@ -21,7 +21,7 @@ exports.post_new_users = async (req, res) => {
             gender,
             password: hash
           });
-          //   member.save(); //saving the new member to mongodb
+          member.save(); //saving the new member to mongodb
           console.log(member);
         }
       });

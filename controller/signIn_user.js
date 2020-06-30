@@ -1,3 +1,4 @@
+const bcrypt = require("bcryptjs");
 const SignUpUser = require("../models/signUp_users");
 exports.get_user = async (req, res) => {
   const { email: Email, password: pass } = req.body;
@@ -8,15 +9,18 @@ exports.get_user = async (req, res) => {
       if (err) {
         throw err;
       } else if (!isMatch) {
-        console.log("pass not match");
+        isMatch = false;
+        auth = { isMatch };
+        res.send(auth);
       } else {
         if (email !== Email) {
           isMatch = false;
           auth = { isMatch };
         } else {
           isMatch = true;
-          auth = { isMatch, Email, fullName };
+          auth = { isMatch, email, fullName };
         }
+
         res.status(200).send(auth);
         console.log(auth);
       }
