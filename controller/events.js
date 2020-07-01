@@ -2,11 +2,12 @@ const scheduledEvent = require("../models/events");
 const SignInUser = require("../models/signIn_user");
 let array = [];
 exports.add_event = (res, req) => {
-  const { title, currentDate, reminderDate } = req.body;
+  const { title, currentDate, reminderDate, description } = req.body;
   const event = new scheduledEvent({
     title,
     currentDate,
-    reminderDate
+    reminderDate,
+    description
   });
   userEvents.push(event);
   console.log(event);
