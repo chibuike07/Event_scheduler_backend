@@ -3,8 +3,7 @@ const Schema = mongoose.Schema;
 
 const event = new Schema({
   title: String,
-  currentDate: { type: Date },
-  reminderDate: { type: Date },
+  reminderDate: String,
   description: String
 });
 

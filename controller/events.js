@@ -1,16 +1,16 @@
 const scheduledEvent = require("../models/events");
-const SignInUser = require("../models/signIn_user");
+const SignUpUser = require("../models/signUp_users");
 let array = [];
-exports.add_event = (res, req) => {
-  const { title, currentDate, reminderDate, description } = req.body;
+exports.add_event = (req, res) => {
+  const { title, reminderDate, description, fullName } = req.body;
   const event = new scheduledEvent({
     title,
-    currentDate,
-    reminderDate,
+    reminderDate: new Date(reminderDate),
     description
   });
-  userEvents.push(event);
-  console.log(event);
+  res.status(200).send("ok");
+  console.log("event", event);
+  addUserEvent(fullName, event);
 };
 
 exports.put_event = async (req, res) => {
@@ -45,4 +45,19 @@ exports.get_event = async (req, res) => {
   const findEvent = await scheduledEvent.find();
   res.send(findEvent);
   console.log(findEvent);
+};
+
+const addUserEvent = async (name, event) => {
+  array.push(event);
+  await SignUpUser.updateMany(
+    { fullName: name },
+    { $set: { event: array } },
+    (err, res) => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log("Event updated successfully");
+      }
+    }
+  );
 };

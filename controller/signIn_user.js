@@ -21,8 +21,7 @@ exports.get_user = async (req, res) => {
           auth = { isMatch, email, fullName };
         }
 
-        res.status(200).send(auth);
-        console.log(auth);
+        res.send(auth);
       }
     });
   });
