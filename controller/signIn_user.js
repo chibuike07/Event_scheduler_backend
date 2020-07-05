@@ -7,7 +7,7 @@ exports.get_user = async (req, res) => {
   secureId.map(({ email, password, fullName }) => {
     bcrypt.compare(pass, password, (err, isMatch) => {
       if (err) {
-        throw err;
+        throw new Error(err);
       } else if (!isMatch) {
         isMatch = false;
         auth = { isMatch };
@@ -19,9 +19,10 @@ exports.get_user = async (req, res) => {
         } else {
           isMatch = true;
           auth = { isMatch, email, fullName };
+          // return;
         }
 
-        res.send(auth);
+        res.status(200).send(auth);
       }
     });
   });

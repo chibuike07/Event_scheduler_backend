@@ -36,6 +36,32 @@ exports.get_user = async (req, res) => {
   res.send(findMembers); //sending the found memeber to registered_members path
 };
 
+exports.put_event = async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+
+  SignUpUser.findByIdAndUpdate(id, req.body, (err, updated) => {
+    if (err) {
+      return err;
+    } else {
+      res.send(updated);
+      console.log(updated);
+    }
+  });
+};
+
+exports.delete_event = async (req, res) => {
+  const { id } = req.params;
+  const removedData = await SignUpUser.findByIdAndRemove(id, (err, removed) => {
+    if (err) {
+      return err;
+    } else {
+      res.send(removed);
+      console.log(removed);
+    }
+  });
+};
+
 const sendEmail = (signupMemberEmail, pass, fullName) => {
   let transporter = nodeMailer.createTransport({
     service: "gmail",

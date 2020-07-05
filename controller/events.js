@@ -1,7 +1,6 @@
 const scheduledEvent = require("../models/events");
 const SignUpUser = require("../models/signUp_users");
-let array = [];
-exports.add_event = (req, res) => {
+exports.add_event = async (req, res) => {
   const { title, reminderDate, description, fullName } = req.body;
   const event = new scheduledEvent({
     title,
@@ -9,55 +8,25 @@ exports.add_event = (req, res) => {
     description
   });
   res.status(200).send("ok");
-  console.log("event", event);
-  addUserEvent(fullName, event);
+  await addUserEvent(fullName, event);
 };
 
-exports.put_event = async (req, res) => {
-  const { id } = req.params;
-
-  scheduledEvent.findByIdAndUpdate(id, req.body, (err, updated) => {
-    if (err) {
-      return err;
-    } else {
-      res.send(updated);
-      console.log(updated);
-    }
+let array = [];
+const addUserEvent = async (name, events) => {
+  let user = await SignUpUser.find({ fullName: name });
+  user.map(({ event, _id, ...others }) => {
+    event.push(events);
+    SignUpUser.findByIdAndUpdate(
+      //updated the user object with the book the user borrowed
+      _id, //set the id to find
+      others._doc, //things to update
+      (err, updated) => {
+        if (err) {
+          return err;
+        } else {
+          console.log("memberUpdated", updated);
+        }
+      }
+    );
   });
-};
-
-exports.delete_event = async (req, res) => {
-  const { id } = req.params;
-  const removedData = await scheduledEvent.findByIdAndRemove(
-    id,
-    (err, removed) => {
-      if (err) {
-        return err;
-      } else {
-        res.send(removed);
-        console.log(removed);
-      }
-    }
-  );
-};
-
-exports.get_event = async (req, res) => {
-  const findEvent = await scheduledEvent.find();
-  res.send(findEvent);
-  console.log(findEvent);
-};
-
-const addUserEvent = async (name, event) => {
-  array.push(event);
-  await SignUpUser.updateMany(
-    { fullName: name },
-    { $set: { event: array } },
-    (err, res) => {
-      if (err) {
-        console.error(err);
-      } else {
-        console.log("Event updated successfully");
-      }
-    }
-  );
 };

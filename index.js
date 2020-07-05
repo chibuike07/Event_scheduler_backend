@@ -17,9 +17,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(SignIn);
 app.use(signUpUser);
 app.use(eventScheduler);
-app.use(SignIn);
 
 mongoose
   .connect(MONGODB_URI, Options)
