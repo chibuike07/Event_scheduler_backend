@@ -1,10 +1,12 @@
 const scheduledEvent = require("../models/events");
 const SignUpUser = require("../models/signUp_users");
 exports.add_event = async (req, res) => {
-  const { title, reminderDate, description, fullName } = req.body;
+  const { title, reminderDate, reminderTime, description, fullName } = req.body;
+  console.log(reminderTime);
   const event = new scheduledEvent({
     title,
-    reminderDate: new Date(reminderDate),
+    reminderDate,
+    reminderTime,
     description
   });
   res.status(200).send("ok");
@@ -16,6 +18,7 @@ const addUserEvent = async (name, events) => {
   let user = await SignUpUser.find({ fullName: name });
   user.map(({ event, _id, ...others }) => {
     event.push(events);
+
     SignUpUser.findByIdAndUpdate(
       //updated the user object with the book the user borrowed
       _id, //set the id to find

@@ -38,8 +38,9 @@ exports.get_user = async (req, res) => {
 
 exports.put_event = async (req, res) => {
   const { id } = req.params;
-  console.log(id);
-
+  const { reminderDate } = req.body;
+  console.log("reminderDate", reminderDate);
+  // reminderDate = new Date(reminderDate).toISOString()
   SignUpUser.findByIdAndUpdate(id, req.body, (err, updated) => {
     if (err) {
       return err;

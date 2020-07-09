@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const event = new Schema({
   title: String,
   reminderDate: String,
+  reminderTime: String,
   description: String
 });
 

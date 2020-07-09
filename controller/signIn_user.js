@@ -19,7 +19,6 @@ exports.get_user = async (req, res) => {
         } else {
           isMatch = true;
           auth = { isMatch, email, fullName };
-          // return;
         }
 
         res.status(200).send(auth);

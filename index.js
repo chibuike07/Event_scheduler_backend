@@ -10,6 +10,7 @@ const Options = {
   useCreateIndex: true,
   useUnifiedTopology: true
 };
+
 const PORT = 5000;
 const MONGODB_URI = "mongodb://localhost:07017(express.server)";
 
@@ -17,8 +18,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(SignIn);
 app.use(signUpUser);
+app.use(SignIn);
 app.use(eventScheduler);
 
 mongoose

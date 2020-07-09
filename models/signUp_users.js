@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const events = new Schema({
   title: String,
   reminderDate: String,
+  reminderTime: String,
   description: String
 });
 const SignUpUsers = new Schema({
