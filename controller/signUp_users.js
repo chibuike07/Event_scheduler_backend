@@ -4,13 +4,12 @@ const nodeMailer = require("nodemailer");
 exports.post_new_users = (req, res) => {
   const { fullName, email, password, gender } = req.body;
 
-  const pass = password;
   const saltR = 10;
   bcrypt.genSalt(saltR, (err, salt) => {
     if (err) {
       console.error(err);
     } else {
-      bcrypt.hash(pass, salt, (err, hash) => {
+      bcrypt.hash(password, salt, (err, hash) => {
         if (err) {
           console.error(err);
         } else {
@@ -21,7 +20,18 @@ exports.post_new_users = (req, res) => {
             gender,
             password: hash
           });
-          member.save(); //saving the new member to mongodb
+          member
+            .save()
+            .then(() => {
+              res.status(201).json({
+                massage: "User added successfully"
+              });
+            })
+            .catch(err => {
+              res.status(500).send({
+                error: err
+              });
+            }); //saving the new member to mongodb
           console.log(member);
         }
       });
