@@ -9,22 +9,21 @@ exports.get_user = async (req, res) => {
   } else {
     let auth = null;
     secureId.find(({ email, password, fullName, _id }) => {
-      -bcrypt.compare(pass, password, (err, isMatch) => {
-        bcrypt.compare(pass, password, (err, isMatch) => {
-          if (err) {
-            res
-              .status(200)
-              .send({ error: "server error please try again later" });
-          } else if (!isMatch) {
-            res.status(200).send({ error: 401 });
-          } else {
-            const token = jwt.sign({ userId: _id }, "RAMDOM_TOKEN_SECRET", {
-              expiresIn: "24h"
-            });
-            auth = { fullName, token };
-            res.status(200).send(auth);
-          }
-        });
+      bcrypt.compare(pass, password, (err, isMatch) => {
+        if (err) {
+          res
+            .status(200)
+            .send({ error: "server error please try again later" });
+        } else if (!isMatch) {
+          res.status(200).send({ error: 401 });
+        } else {
+          const token = jwt.sign({ userId: _id }, "RAMDOM_TOKEN_SECRET", {
+            expiresIn: "24h"
+          });
+
+          auth = { fullName, token };
+          res.status(200).send(auth);
+        }
       });
     });
   }

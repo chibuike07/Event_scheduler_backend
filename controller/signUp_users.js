@@ -1,6 +1,7 @@
 const SignUpUser = require("../models/signUp_users");
 const bcrypt = require("bcryptjs");
 const nodeMailer = require("nodemailer");
+
 exports.post_new_users = (req, res) => {
   const { fullName, email, password, gender } = req.body;
 
