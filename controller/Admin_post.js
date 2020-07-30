@@ -22,6 +22,13 @@ exports.get_Admin_event = async (req, res) => {
   res.send(adminEvent);
 };
 
+exports.getSpecifiedEvent = async (req, res) => {
+  const { id } = req.params;
+  console.log("id", id);
+  const Specified = await AdminEvents.findById({ _id: id });
+  res.send(Specified);
+  console.log("Specified", Specified);
+};
 exports.delete_event = async (req, res) => {
   const { id } = req.params;
   const removedData = await AdminEvents.findByIdAndRemove(
