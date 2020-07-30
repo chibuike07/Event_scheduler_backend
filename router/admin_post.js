@@ -15,9 +15,11 @@ cloudinary.config({
 });
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
-  folder: "Admin_event_photo",
-  allowedFormats: ["jpg", "png", "jpeg"],
-  transformation: [{ width: 300, height: 300, crop: "limit" }],
+  params: {
+    folder: "Admin_event_photo",
+    allowedFormats: ["jpg", "png", "jpeg"],
+    public_id: (req, file) => file.originalname,
+  },
 });
 
 const parser = multer({ storage: storage });

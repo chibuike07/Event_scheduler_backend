@@ -6,7 +6,6 @@ exports.add_post = (req, res, next) => {
   console.log("req.file", req.file);
   const date = new Date().toLocaleDateString();
   const time = new Date().toTimeString();
-
   const readyEvents = new AdminEvents({
     title,
     date,
