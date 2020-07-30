@@ -5,7 +5,7 @@ exports.add_post = (req, res, next) => {
   const { title, description } = req.body;
   console.log("req.file", req.file);
   const date = new Date().toLocaleDateString();
-  const time = new Date().toTimeString();
+  const time = new Date().toLocaleTimeString();
   const readyEvents = new AdminEvents({
     title,
     date,
@@ -24,10 +24,8 @@ exports.get_Admin_event = async (req, res) => {
 
 exports.getSpecifiedEvent = async (req, res) => {
   const { id } = req.params;
-  console.log("id", id);
   const Specified = await AdminEvents.findById({ _id: id });
   res.send(Specified);
-  console.log("Specified", Specified);
 };
 exports.delete_event = async (req, res) => {
   const { id } = req.params;
