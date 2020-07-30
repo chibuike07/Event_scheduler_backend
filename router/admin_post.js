@@ -26,4 +26,5 @@ const parser = multer({ storage: storage });
 router.post("/admin_post/events", parser.single("file"), adminPost.add_post);
 router.get("/admin_post/event_update/", adminPost.get_Admin_event);
 router.delete("/admin_post/event_update/:id", adminPost.delete_event);
+router.get("/admin_post/event_update/:id", adminPost.getSpecifiedEvent);
 module.exports = router;
