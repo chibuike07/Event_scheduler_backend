@@ -27,6 +27,23 @@ exports.getSpecifiedEvent = async (req, res) => {
   const Specified = await AdminEvents.findById({ _id: id });
   res.send(Specified);
 };
+
+exports.put_Amin_event = async (req, res) => {
+  const { id } = req.params;
+  const dynamicField = {};
+  console.log("req.body", req.body);
+  const { accessKey, adjustment } = req.body;
+  dynamicField[accessKey] = adjustment;
+  AdminEvents.updateOne({ _id: id }, { $set: dynamicField }, (err, updated) => {
+    if (err) {
+      return err;
+    } else {
+      res.send(updated);
+      console.log("AminEvent updated", updated);
+    }
+  });
+};
+
 exports.delete_event = async (req, res) => {
   const { id } = req.params;
   const removedData = await AdminEvents.findByIdAndRemove(
