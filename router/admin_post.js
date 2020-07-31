@@ -18,7 +18,7 @@ const storage = new CloudinaryStorage({
   params: {
     folder: "Admin_event_photo",
     allowedFormats: ["jpg", "png", "jpeg"],
-    public_id: (req, file) => file.originalname,
+    public_id: (req, file) => file.filename,
   },
 });
 
@@ -26,6 +26,10 @@ const parser = multer({ storage: storage });
 router.post("/admin_post/events", parser.single("file"), adminPost.add_post);
 router.get("/admin_post/event_update/", adminPost.get_Admin_event);
 router.get("/admin_post/event_update/:id", adminPost.getSpecifiedEvent);
-router.put("/admin_post/event_update/:id", adminPost.put_Amin_event);
+router.put(
+  "/admin_post/event_update/:id",
+  parser.single("admin_upload"),
+  adminPost.put_Amin_event
+);
 router.delete("/admin_post/event_update/:id", adminPost.delete_event);
 module.exports = router;

@@ -31,17 +31,26 @@ exports.getSpecifiedEvent = async (req, res) => {
 exports.put_Amin_event = async (req, res) => {
   const { id } = req.params;
   const dynamicField = {};
-  console.log("req.body", req.body);
   const { accessKey, adjustment } = req.body;
-  dynamicField[accessKey] = adjustment;
-  AdminEvents.updateOne({ _id: id }, { $set: dynamicField }, (err, updated) => {
-    if (err) {
-      return err;
-    } else {
-      res.send(updated);
-      console.log("AminEvent updated", updated);
+  console.log("req.file", req.file);
+  console.log("req.body", req.body);
+  if (req.file) {
+    dynamicField["image"] = req.file.path;
+  } else {
+    dynamicField[accessKey] = adjustment;
+  }
+  await AdminEvents.updateOne(
+    { _id: id },
+    { $set: dynamicField },
+    (err, updated) => {
+      if (err) {
+        return err;
+      } else {
+        res.send(updated);
+        console.log("AdminEvent updated", updated);
+      }
     }
-  });
+  );
 };
 
 exports.delete_event = async (req, res) => {
