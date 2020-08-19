@@ -30,6 +30,4 @@ mongoose
   .then(console.log("connected succesfully"))
   .catch((err) => console.error(err));
 
-let server = app.listen(PORT, () => {
-  console.log(`server ready on ${PORT}`);
-});
+let server = app.listen(PORT);
