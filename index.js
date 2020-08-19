@@ -13,7 +13,7 @@ const Options = {
   useUnifiedTopology: true,
 };
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 const MONGODB_URI = "mongodb://localhost:07017(express.server)";
 
 const app = express();
@@ -31,5 +31,5 @@ mongoose
   .catch((err) => console.error(err));
 
 let server = app.listen(PORT, () => {
-  console.log(`server ready on http://${process.env.IP_ADDRESS}:${PORT}`);
+  console.log(`server ready on ${PORT}`);
 });
