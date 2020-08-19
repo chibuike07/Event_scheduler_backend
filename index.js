@@ -13,8 +13,10 @@ const Options = {
   useUnifiedTopology: true,
 };
 
-const PORT = 5000;
-const MONGODB_URI = "mongodb://localhost:07017(express.server)";
+const PORT = process.env.PORT || 5000;
+console.log("procec", process.env.PORT);
+const MONGODB_URI = `${process.env.MONGODB_URI}`;
+// const MONGODB_URI = "mongodb://localhost:07017(express.server)";
 
 const app = express();
 app.use(cors());
@@ -30,6 +32,7 @@ mongoose
   .then(console.log("connected succesfully"))
   .catch((err) => console.error(err));
 
+// https://medium.com/make-school/how-to-deploy-your-node-js-mongodb-app-to-the-web-using-heroku-63d4bccf2675
 let server = app.listen(PORT, () => {
-  console.log(`server ready on http://${process.env.IP_ADDRESS}:${PORT}`);
+  console.log(`server ready on ${PORT}`);
 });
