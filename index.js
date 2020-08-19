@@ -13,9 +13,7 @@ const Options = {
   useUnifiedTopology: true,
 };
 
-const PORT = process.env.PORT || 5000;
-// const MONGODB_URI =
-// "mongodb+srv://Pdidy:Y2eueApEEJ9wgVLq@cluster0.ldq9h.mongodb.net/test";
+const PORT = 5000;
 const MONGODB_URI = "mongodb://localhost:07017(express.server)";
 
 const app = express();
@@ -27,12 +25,11 @@ app.use(SignIn);
 app.use(eventScheduler);
 app.use(AdminPostEvent);
 // app.use(express.static("admin"));
-app.get("/", (req, res) => {
-  res.send("hello dear world");
-});
 mongoose
   .connect(MONGODB_URI, Options)
   .then(console.log("connected succesfully"))
   .catch((err) => console.error(err));
 
-let server = app.listen(PORT);
+let server = app.listen(PORT, () => {
+  console.log(`server ready on http://${process.env.IP_ADDRESS}:${PORT}`);
+});
