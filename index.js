@@ -14,9 +14,9 @@ const Options = {
 };
 
 const PORT = process.env.PORT || 5000;
-const MONGODB_URI =
-  "mongodb+srv://Pdidy:Y2eueApEEJ9wgVLq@cluster0.ldq9h.mongodb.net/test";
-// const MONGODB_URI = "mongodb://localhost:07017(express.server)";
+// const MONGODB_URI =
+// "mongodb+srv://Pdidy:Y2eueApEEJ9wgVLq@cluster0.ldq9h.mongodb.net/test";
+const MONGODB_URI = "mongodb://localhost:07017(express.server)";
 
 const app = express();
 app.use(cors());
