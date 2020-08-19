@@ -25,6 +25,9 @@ app.use(SignIn);
 app.use(eventScheduler);
 app.use(AdminPostEvent);
 // app.use(express.static("admin"));
+app.get("/", (req, res) => {
+  res.send("hello");
+});
 mongoose
   .connect(MONGODB_URI, Options)
   .then(console.log("connected succesfully"))
