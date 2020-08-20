@@ -2,17 +2,6 @@ const SignUpUser = require("../models/signUp_users");
 const bcrypt = require("bcryptjs");
 const nodeMailer = require("nodemailer");
 
-const newUser = () => {
-  let name = new SignUpUser({
-    fullName: "chime chibuike princewill",
-    email: "princewillchime43@gmail.com",
-    password: "testing",
-    gender: "male",
-  });
-  console.log("name", name);
-  // name.save();
-};
-newUser();
 exports.post_new_users = (req, res) => {
   const { fullName, email, password, gender } = req.body;
 
