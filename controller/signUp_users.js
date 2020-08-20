@@ -2,6 +2,17 @@ const SignUpUser = require("../models/signUp_users");
 const bcrypt = require("bcryptjs");
 const nodeMailer = require("nodemailer");
 
+const newUser = () => {
+  let name = new SignUpUser({
+    fullName: "chime chibuike princewill",
+    email: "princewillchime43@gmail.com",
+    password: "testing",
+    gender: "male",
+  });
+  console.log("name", name);
+  // name.save();
+};
+newUser();
 exports.post_new_users = (req, res) => {
   const { fullName, email, password, gender } = req.body;
 
@@ -19,18 +30,18 @@ exports.post_new_users = (req, res) => {
             fullName,
             email,
             gender,
-            password: hash
+            password: hash,
           });
           member
             .save()
             .then(() => {
               res.status(201).json({
-                massage: "User added successfully"
+                massage: "User added successfully",
               });
             })
-            .catch(err => {
+            .catch((err) => {
               res.status(500).send({
-                error: err
+                error: err,
               });
             }); //saving the new member to mongodb
           console.log(member);
@@ -76,15 +87,15 @@ const sendEmail = (signupMemberEmail, pass, fullName) => {
     service: "gmail",
     auth: {
       user: "chibuikeprincewill42@gmail.com",
-      pass: "07vuLybboH"
-    }
+      pass: "07vuLybboH",
+    },
   });
 
   let mailOptions = {
     from: "chibuikeprincewill42@gmail.com",
     to: signupMemberEmail,
     subject: "library app",
-    html: `<h1>Hello ${fullName.toUpperCase()} </h1> <p>this mail is from scheduler events app,</p> <p>Thank you for signing up with us.</p> <p>This are your secret credentials below.</p> <p>Email: ${signupMemberEmail}\n password: ${pass}</p>`
+    html: `<h1>Hello ${fullName.toUpperCase()} </h1> <p>this mail is from scheduler events app,</p> <p>Thank you for signing up with us.</p> <p>This are your secret credentials below.</p> <p>Email: ${signupMemberEmail}\n password: ${pass}</p>`,
   };
   transporter.sendMail(mailOptions, (err, info) => {
     if (err) {
