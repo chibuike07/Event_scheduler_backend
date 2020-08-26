@@ -26,7 +26,6 @@ app.use(signUpUser);
 app.use(SignIn);
 app.use(eventScheduler);
 app.use(AdminPostEvent);
-// app.use(express.static("admin"));
 mongoose
   .connect(MONGODB_URI, Options)
   .then(console.log("connected succesfully"))
