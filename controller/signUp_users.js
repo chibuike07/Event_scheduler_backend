@@ -1,7 +1,7 @@
 const SignUpUser = require("../models/signUp_users");
 const bcrypt = require("bcryptjs");
 const nodeMailer = require("nodemailer");
-
+require("dotenv").config();
 exports.post_new_users = (req, res) => {
   const { fullName, email, password, gender } = req.body;
 
@@ -58,7 +58,7 @@ exports.put_event = async (req, res) => {
     }
   });
 };
-
+console.log("object", process.env.PASSWORD);
 exports.delete_event = async (req, res) => {
   const { id } = req.params;
   const removedData = await SignUpUser.findByIdAndRemove(id, (err, removed) => {
@@ -72,17 +72,17 @@ exports.delete_event = async (req, res) => {
 };
 
 const sendEmail = (signupMemberEmail, pass, fullName) => {
-  const { Email, Password } = process.env;
+  const { EMAIL, PASSWORD } = process.env;
   let transporter = nodeMailer.createTransport({
     service: "gmail",
     auth: {
-      user: `${Password}`,
-      pass: `${Email}`,
+      user: `${PASSWORD}`,
+      pass: `${EMAIL}`,
     },
   });
 
   let mailOptions = {
-    from: `${Email}`,
+    from: `${EMAIL}`,
     to: signupMemberEmail,
     subject: "library app",
     html: `<h1>Hello ${fullName.toUpperCase()} </h1> <p>this mail is from scheduler events app,</p> <p>Thank you for signing up with us.</p> <p>This are your secret credentials below.</p> <p>Email: ${signupMemberEmail}\n password: ${pass}</p>`,
