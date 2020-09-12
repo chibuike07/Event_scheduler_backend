@@ -72,16 +72,17 @@ exports.delete_event = async (req, res) => {
 };
 
 const sendEmail = (signupMemberEmail, pass, fullName) => {
+  const { Email, Password } = process.env;
   let transporter = nodeMailer.createTransport({
     service: "gmail",
     auth: {
-      user: "chibuikeprincewill42@gmail.com",
-      pass: "07vuLybboH",
+      user: `${Password}`,
+      pass: `${Email}`,
     },
   });
 
   let mailOptions = {
-    from: "chibuikeprincewill42@gmail.com",
+    from: `${Email}`,
     to: signupMemberEmail,
     subject: "library app",
     html: `<h1>Hello ${fullName.toUpperCase()} </h1> <p>this mail is from scheduler events app,</p> <p>Thank you for signing up with us.</p> <p>This are your secret credentials below.</p> <p>Email: ${signupMemberEmail}\n password: ${pass}</p>`,
