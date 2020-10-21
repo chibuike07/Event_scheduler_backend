@@ -1,44 +1,107 @@
 const scheduledEvent = require("../models/events");
-const SignUpUser = require("../models/signUp_users");
+
 const nodeMailer = require("nodemailer");
 const cronJob = require("node-cron");
 const schedule = require("node-schedule");
+const { eventValidator } = require("../middleware/eventValidator");
+
 exports.add_event = async (req, res) => {
   const { title, reminderDate, reminderTime, description, fullName } = req.body;
 
-  const event = new scheduledEvent({
+  const { error } = eventValidator.validate(req.body);
+
+  if (error) {
+    return res.status(401).json({
+      message: error.details[0].message.split('"').join(""),
+      status: "error",
+    });
+  }
+
+  const verifyName = await scheduledEvent.findOne({ fullName: fullName });
+
+  if (!verifyName) {
+    return res.status(400).json({
+      message: "No match was found",
+      status: "error",
+    });
+  }
+
+  const Event = new scheduledEvent({
     title,
     reminderDate,
     reminderTime,
-    description
+    description,
   });
-  res.status(200).send("ok");
-  await addUserEvent(fullName, event);
+
+  await addUserEvent({ fullName, Event, res });
 };
 
-let array = [];
-const addUserEvent = async (name, events) => {
-  let user = await SignUpUser.find({ fullName: name });
-  user.map(({ event, _id, ...others }) => {
-    event.push(events);
+const addUserEvent = async ({ fullName, Event, res }) => {
+  await scheduledEvent.updateOne(
+    { fullName: fullName },
+    { $push: { event: Event } }
+  );
 
-    SignUpUser.findByIdAndUpdate(
-      //updated the user object with the added event
-      _id, //set the id to find
-      others._doc, //things to update
-      (err, updated) => {
-        if (err) {
-          return err;
-        } else {
-          console.log("memberUpdated", updated);
-        }
-      }
-    );
+  return res.status(200).json({
+    message: "event added successfully",
+    status: "success",
+  });
+};
+
+module.exports.getUserEvent = async (req, res) => {
+  const getEvent = scheduledEvent.find();
+
+  if (!getEvent) {
+    return res.status(200).json({
+      message: "No registered user yet",
+    });
+  }
+
+  return res.status(200).json({
+    data: getEvent,
+    status: "success",
+  });
+};
+
+module.exports.put_event = async (req, res) => {
+  const { eventId } = req.params;
+
+  // const eventId = await SignUpUser
+  const foundUser = await scheduledEvent.findByIdAndUpdate(eventId, req.body);
+
+  if (!foundUser) {
+    return res.status(401).json({
+      message: "No match was found",
+      status: "error",
+    });
+  }
+
+  return res.status(200).json({
+    message: "Updated successfully",
+    status: "success",
+  });
+};
+
+exports.delete_event = async (req, res) => {
+  const { eventId } = req.params;
+
+  await scheduledEvent.findByIdAndDelete(eventId, (err, removed) => {
+    if (err) {
+      return res.status(400).json({
+        message: "No match was found",
+        status: "error",
+      });
+    } else {
+      return res.status(200).json({
+        message: "Removed successfully",
+        status: "success",
+      });
+    }
   });
 };
 
 const alertReadyEvent = async () => {
-  let user = await SignUpUser.find({});
+  let user = await scheduledEvent.find({});
   let now = new Date().toLocaleDateString();
   user.map(({ event, email, fullName }) => {
     if (event.length > 0) {
@@ -75,9 +138,9 @@ const sendEmail = (signupMemberEmail, fullName, desc, title, date, time) => {
   let transporter = nodeMailer.createTransport({
     service: "gmail",
     auth: {
-      user: "chibuikeprincewill42@gmail.com",
-      pass: "07vuLybboH"
-    }
+      user: process.env.EMAIL,
+      pass: process.env.EMAILPASS,
+    },
   });
 
   let mailOptions = {
@@ -88,13 +151,14 @@ const sendEmail = (signupMemberEmail, fullName, desc, title, date, time) => {
       time
     ).toTimeString()}. Below is the event</p>   <div><h2>${title.toUpperCase()}</h2> <p>The activity description is ${desc.toUpperCase()} is scheduled on 
      ${date}
-     </p></div>`
+     </p></div>`,
   };
+
   transporter.sendMail(mailOptions, (err, info) => {
     if (err) {
-      console.error(err);
+      throw new Error(err);
     } else {
-      console.log(`email successfully sent! ${info.response}`);
+      throw `email successfully sent! ${info.response}`;
     }
   });
 };

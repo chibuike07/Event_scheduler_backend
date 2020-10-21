@@ -1,10 +1,13 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const signIn_user = new Schema({
-  email: String,
-  password: String
-});
+const signIn_user = new Schema(
+  {
+    email: String,
+    password: String,
+  },
+  { timestamps: true }
+);
 
-let SignIn = mongoose.model("UserSignIn", signIn_user);
+const SignIn = mongoose.model("UserSignIn", signIn_user);
 module.exports = SignIn;

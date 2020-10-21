@@ -1,30 +1,51 @@
 const bcrypt = require("bcryptjs");
 const SignUpUser = require("../models/signUp_users");
 const jwt = require("jsonwebtoken");
+const { SignInValidator } = require("../middleware/registrationValidation");
 exports.get_user = async (req, res) => {
-  const { email: Email, password: pass } = req.body;
-  let secureId = await SignUpUser.find({ email: Email });
-  if (secureId.length < 1) {
-    res.status(200).send({ statusr: 401 });
-  } else {
-    let auth = null;
-    secureId.find(({ email, password, fullName, _id }) => {
-      bcrypt.compare(pass, password, (err, isMatch) => {
-        if (err) {
-          res
-            .status(200)
-            .send({ error: "server error please try again later" });
-        } else if (!isMatch) {
-          res.status(200).send({ error: 401 });
-        } else {
-          const token = jwt.sign({ userId: _id }, "RAMDOM_TOKEN_SECRET", {
-            expiresIn: "24h"
-          });
+  const { email: Email, password } = req.body;
 
-          auth = { fullName, token };
-          res.status(200).send(auth);
-        }
-      });
+  const { error } = SignInValidator.validate(req.body);
+
+  if (error) {
+    return res.status(401).json({
+      message: error.details[0].message.split('"').join(""),
+      status: "error",
     });
   }
+
+  let verifyUser = await SignUpUser.findOne({ email: Email });
+
+  if (!verifyUser) {
+    return res.status(400).json({
+      message: "email or password incorrect",
+      status: "error",
+    });
+  }
+
+  const isValidEntry = await bcrypt.compare(password, verifyUser.password);
+
+  if (!isValidEntry) {
+    return res.status(400).json({
+      message: "email or password incorrect",
+      error: "error",
+    });
+  }
+
+  const token = jwt.sign({ _id: verifyUser._id }, "USER_ACCESS_SECRETE", {
+    expiresIn: "2h",
+  });
+
+  res
+    .cookie("USER_TOKEN_KEY", token, {
+      expires: new Date(Number(new Date()) + 86400000), // expires after 24hrs
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production" ? true : false,
+    })
+    .json({
+      message: "login successful",
+      status: "success",
+      userId: verifyUser._id,
+      token: token,
+    });
 };
