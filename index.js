@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const signUpUser = require("./router/signUp_users");
 const eventScheduler = require("./router/events");
 const SignIn = require("./router/signIn_user");
@@ -14,12 +15,13 @@ const Options = {
 };
 
 const PORT = process.env.PORT || 7000;
-console.log("procec", process.env.PORT);
-const MONGODB_URI = `${process.env.MONGODB_URI}`;
-// const MONGODB_URI = "mongodb://localhost:07017(express.server)";
+// const MONGODB_URI = `${process.env.MONGODB_URI}`;
+const MONGODB_URI = "mongodb://localhost:07017(express.server)";
 
 const app = express();
+
 app.use(cors());
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api/v1/", signUpUser);

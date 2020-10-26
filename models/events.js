@@ -7,6 +7,7 @@ const event = new Schema(
     reminderDate: { type: String, required: true },
     reminderTime: { type: String, required: true },
     description: { type: String, required: true },
+    userId: { type: String, required: true },
   },
   { timestamps: true }
 );

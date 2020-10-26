@@ -6,7 +6,6 @@ require("dotenv").config();
 
 exports.post_new_users = async (req, res) => {
   const { fullName, email, password, gender } = req.body;
-
   const { error } = SignUpValiddator.validate(req.body);
 
   if (error) {
@@ -114,7 +113,7 @@ const sendEmail = (signupMemberEmail, pass, fullName, res) => {
 
   transporter.sendMail(mailOptions, (err, info) => {
     if (err) {
-      throw err;
+      console.error(err);
     } else {
       throw `email successfully sent! ${info.response}`;
     }

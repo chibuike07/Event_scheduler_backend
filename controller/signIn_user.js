@@ -32,12 +32,16 @@ exports.get_user = async (req, res) => {
     });
   }
 
-  const token = jwt.sign({ _id: verifyUser._id }, "USER_ACCESS_SECRETE", {
-    expiresIn: "2h",
-  });
+  const token = jwt.sign(
+    { _id: verifyUser._id },
+    process.env.USER_ACCESS_SECRETE,
+    {
+      expiresIn: "24h",
+    }
+  );
 
   res
-    .cookie("USER_TOKEN_KEY", token, {
+    .cookie(process.env.USER_TOKEN_KEY, token, {
       expires: new Date(Number(new Date()) + 86400000), // expires after 24hrs
       httpOnly: true,
       secure: process.env.NODE_ENV === "production" ? true : false,
@@ -46,6 +50,6 @@ exports.get_user = async (req, res) => {
       message: "login successful",
       status: "success",
       userId: verifyUser._id,
-      token: token,
+      fullName: verifyUser.fullName,
     });
 };

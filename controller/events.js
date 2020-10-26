@@ -6,54 +6,58 @@ const schedule = require("node-schedule");
 const { eventValidator } = require("../middleware/eventValidator");
 
 exports.add_event = async (req, res) => {
-  const { title, reminderDate, reminderTime, description, fullName } = req.body;
+  //destructuring the request body
+  const { title, reminderDate, reminderTime, description } = req.body;
 
+  //checking for error
   const { error } = eventValidator.validate(req.body);
 
   if (error) {
+    //sending error response to the client
     return res.status(401).json({
       message: error.details[0].message.split('"').join(""),
       status: "error",
     });
   }
 
-  const verifyName = await scheduledEvent.findOne({ fullName: fullName });
-
-  if (!verifyName) {
-    return res.status(400).json({
-      message: "No match was found",
-      status: "error",
-    });
-  }
-
+  //creating new event
   const Event = new scheduledEvent({
     title,
     reminderDate,
     reminderTime,
     description,
+    userId: req.user._id,
   });
 
-  await addUserEvent({ fullName, Event, res });
-};
+  try {
+    //saving the event to the database
+    await Event.save();
 
-const addUserEvent = async ({ fullName, Event, res }) => {
-  await scheduledEvent.updateOne(
-    { fullName: fullName },
-    { $push: { event: Event } }
-  );
-
-  return res.status(200).json({
-    message: "event added successfully",
-    status: "success",
-  });
+    // sending a success message to the client
+    return res.status(200).json({
+      message: "event added successfully",
+      status: "success",
+    });
+  } catch (error) {
+    //sendint an error message to the client
+    return res.status(400).json({
+      message: error,
+      status: "error",
+    });
+  }
 };
 
 module.exports.getUserEvent = async (req, res) => {
-  const getEvent = scheduledEvent.find();
+  const { page = 1, limit = 10 } = req.query;
+
+  const getEvent = await scheduledEvent
+    .find({ userId: req.user._id })
+    .limit(limit * 1)
+    .skip((page - 1) * limit);
 
   if (!getEvent) {
     return res.status(200).json({
-      message: "No registered user yet",
+      message: "Not a registered user yet",
     });
   }
 
@@ -125,7 +129,7 @@ const alertReadyEvent = async () => {
   });
 };
 
-alertReadyEvent();
+// alertReadyEvent();
 // const excuteTime = () => {
 //   schedule.scheduleJob("* * * * *", () => {
 
