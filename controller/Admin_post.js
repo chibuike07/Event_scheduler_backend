@@ -4,7 +4,7 @@ const { adminValidator } = require("../middleware/adminValidator");
 
 exports.add_post = async (req, res, next) => {
   const { title, description } = req.body;
-
+  // console.log("req", req);
   const { error } = adminValidator.validate(req.body);
 
   if (error) {
@@ -14,7 +14,6 @@ exports.add_post = async (req, res, next) => {
     });
   }
 
-  // console.log("req.file", req.file);
   const date = new Date().toLocaleDateString();
   const time = new Date().toLocaleTimeString();
 
@@ -27,7 +26,7 @@ exports.add_post = async (req, res, next) => {
   });
 
   try {
-    await readyEvents.save();
+    readyEvents.save();
 
     return res.status(200).json({
       message: "Event saved successfully",
@@ -35,7 +34,7 @@ exports.add_post = async (req, res, next) => {
     });
   } catch (err) {
     return res.status(400).json({
-      message: err,
+      message: err.response,
       status: "error",
     });
   }
